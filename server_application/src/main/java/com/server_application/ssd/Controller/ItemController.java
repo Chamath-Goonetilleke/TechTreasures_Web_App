@@ -1,5 +1,6 @@
 package com.server_application.ssd.Controller;
 
+import com.server_application.ssd.Models.Card;
 import com.server_application.ssd.Models.Cart;
 import com.server_application.ssd.Models.Items;
 import com.server_application.ssd.Service.ItemService;
@@ -38,9 +39,15 @@ public class ItemController {
         return new ResponseEntity<>(data, HttpStatus.OK);
 
     }
-    @PostMapping("/insert")
+    @PostMapping("/insert-cart")
     public void insertData(@RequestBody Cart cart) {
         System.out.println("Cart: "+cart.getItemId());
         itemService.insertData(cart);
+    }
+
+    @PostMapping("/insert-card")
+    public void insertData(@RequestBody Card card) {
+        System.out.println("Card: "+card.getCardNo());
+        itemService.insertCardData(card);
     }
 }

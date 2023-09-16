@@ -1,5 +1,6 @@
 package com.server_application.ssd.Service;
 
+import com.server_application.ssd.Models.Card;
 import com.server_application.ssd.Models.Cart;
 import com.server_application.ssd.Models.Items;
 import org.springframework.jdbc.core.RowMapper;
@@ -41,6 +42,11 @@ public class ItemService {
 
         String sql = "INSERT INTO carts (itemId, userId) VALUES (?, ?)";
         jdbcTemplate.update(sql, cart.getItemId(), cart.getUserId());
+    }
+
+    public void insertCardData(Card card) {
+        String sql = "INSERT INTO cards (userId, cardNo, holderName, expireDate, cvc) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, card.getUserId(), card.getCardNo(), card.getHolderName(), card.getExpireDate(), card.getCvc());
     }
 
     public class ItemsRowMapper implements RowMapper<Items> {
