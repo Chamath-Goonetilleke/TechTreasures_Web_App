@@ -1,9 +1,6 @@
 package com.server_application.ssd.Models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="items")
@@ -11,25 +8,32 @@ public class Items {
 
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String price;
     private String description;
     private int count;
+    private String imageUrl;
 
-    public Items(int id, String name, String price, String description, int count) {
+    public Items() {
+    }
+
+    public Items(int id, String name, String price, String description, int count, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
         this.count = count;
+        this.imageUrl = imageUrl;
     }
 
-    public Items(String name, String price, String description, int count) {
+    public Items(String name, String price, String description, int count, String imageUrl) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.count = count;
+        this.imageUrl = imageUrl;
     }
 
     public int getId() {
@@ -70,5 +74,13 @@ public class Items {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
