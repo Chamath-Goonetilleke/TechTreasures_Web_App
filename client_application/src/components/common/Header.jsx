@@ -15,8 +15,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink } from "react-router-dom";
 
 const pages = ["Home", "About Us", "Contacts Us"];
-// const settings = ["Profile"];
-const settings = [{ screen: "Profile", path: "/profile" }];
+const settings = [{ screen: "Profile", path: "/login" }];
 
 const storage = window.localStorage;
 

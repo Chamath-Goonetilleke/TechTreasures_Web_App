@@ -2,9 +2,10 @@ import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
+import CreateNewItem from "./CreateNewItem";
 
 export default function AdminPage() {
-  const [value, setValue] = React.useState("one");
+  const [value, setValue] = React.useState("two");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -33,7 +34,7 @@ export default function AdminPage() {
         </Box>
       </div>
       <div>
-        fas
+        {value === "one" ? <></> : value === "two" ? <CreateNewItem/> : value === "three" ? <CreateNewItem/> : value === "four" ? <CreateNewItem/>: <></>}
       </div>
     </div>
   );
