@@ -1,8 +1,6 @@
 package com.server_application.ssd.Service;
 
-import com.server_application.ssd.Models.Card;
-import com.server_application.ssd.Models.Cart;
-import com.server_application.ssd.Models.Items;
+import com.server_application.ssd.Models.Item;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,46 +18,100 @@ public class ItemService {
     public ItemService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-    public List<String> getItemsAll() {
-        String sql = "SELECT name FROM test1";
-        return jdbcTemplate.queryForList(sql, String.class);
+
+    public void createNewItem(Item item){
+
+        String insertItemSql = "INSERT INTO items (name, price, description, quantity) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(insertItemSql, item.getName(), item.getPrice(), item.getDescription(), item.getQuantity());
+
+        int newItemId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
+
+        String insertImageUrlsSql = "INSERT INTO Item_imageUrls (Item_id, imageUrls) VALUES (?, ?)";
+        List<String> imageUrls = item.getImageUrls();
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            for (String imageUrl : imageUrls) {
+                jdbcTemplate.update(insertImageUrlsSql, newItemId, imageUrl);
+            }
+        }
+
     }
 
-    public List<Items> getAllItems() {
-        String sql = "SELECT id, name, price, description, count, imageUrl FROM items";
-        
-        List<Items> itemsList = jdbcTemplate.query(sql, new ItemsRowMapper());
-        return itemsList;
+    public List<Item> getAllItems() {
+
+        String selectAllItemsSql = "SELECT * FROM items";
+        List<Item> items = jdbcTemplate.query(selectAllItemsSql, new ItemsRowMapper());
+
+        for (Item item : items) {
+            String selectImageUrlsSql = "SELECT imageUrls FROM Item_imageUrls WHERE Item_id = ?";
+            List<String> imageUrls = jdbcTemplate.queryForList(selectImageUrlsSql, String.class, item.getId());
+            item.setImageUrls(imageUrls);
+        }
+
+        return items;
     }
 
-    public Map<String, Object> getItemById(int id) {
-        String sql = "SELECT * FROM items WHERE id = ?";
-        Map<String, Object> item = jdbcTemplate.queryForMap(sql, id);
+    public Item getItemById(int itemId) {
+
+        String selectItemSql = "SELECT * FROM items WHERE id = ?";
+        Item item = jdbcTemplate.queryForObject(selectItemSql, new ItemsRowMapper(), itemId);
+
+        if (item != null) {
+            String selectImageUrlsSql = "SELECT imageUrls FROM Item_imageUrls WHERE Item_id = ?";
+            List<String> imageUrls = jdbcTemplate.queryForList(selectImageUrlsSql, String.class, item.getId());
+            item.setImageUrls(imageUrls);
+        }
+
         return item;
     }
 
-    public void insertData(Cart cart) {
+    public void updateItem(Item item) {
 
-        String sql = "INSERT INTO carts (itemId, userId) VALUES (?, ?)";
-        jdbcTemplate.update(sql, cart.getItemId(), cart.getUserId());
+        String updateItemSql = "UPDATE items SET name = ?, price = ?, description = ?, quantity = ? WHERE id = ?";
+        jdbcTemplate.update(updateItemSql, item.getName(), item.getPrice(), item.getDescription(), item.getQuantity(), item.getId());
+
+        List<String> imageUrls = item.getImageUrls();
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+
+            String deleteImageUrlsSql = "DELETE FROM Item_imageUrls WHERE Item_id = ?";
+            jdbcTemplate.update(deleteImageUrlsSql, item.getId());
+
+            String insertImageUrlsSql = "INSERT INTO Item_imageUrls (Item_id, imageUrls) VALUES (?, ?)";
+            for (String imageUrl : imageUrls) {
+                jdbcTemplate.update(insertImageUrlsSql, item.getId(), imageUrl);
+            }
+        }
     }
 
-    public void insertCardData(Card card) {
-        String sql = "INSERT INTO cards (userId, cardNo, holderName, expireDate, cvc) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, card.getUserId(), card.getCardNo(), card.getHolderName(), card.getExpireDate(), card.getCvc());
+    public void deleteItem(int itemId) {
+
+        String deleteItemSql = "DELETE FROM items WHERE id = ?";
+        jdbcTemplate.update(deleteItemSql, itemId);
+
+        String deleteImageUrlsSql = "DELETE FROM Item_imageUrls WHERE Item_id = ?";
+        jdbcTemplate.update(deleteImageUrlsSql, itemId);
     }
 
-    public class ItemsRowMapper implements RowMapper<Items> {
+//    public void insertData(Cart cart) {
+//
+//        String sql = "INSERT INTO carts (itemId, userId) VALUES (?, ?)";
+//        jdbcTemplate.update(sql, cart.getItemId(), cart.getUserId());
+//    }
+//
+//    public void insertCardData(Card card) {
+//        String sql = "INSERT INTO cards (userId, cardNo, holderName, expireDate, cvc) VALUES (?, ?, ?, ?, ?)";
+//        jdbcTemplate.update(sql, card.getUserId(), card.getCardNo(), card.getHolderName(), card.getExpireDate(), card.getCvc());
+//    }
+
+    public class ItemsRowMapper implements RowMapper<Item> {
         @Override
-        public Items mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Items items = new Items();
-            items.setId(rs.getInt("id"));
-            items.setName(rs.getString("name"));
-            items.setPrice(rs.getString("price"));
-            items.setDescription(rs.getString("description"));
-            items.setCount(rs.getInt("count"));
-            items.setImageUrl(rs.getString("imageUrl"));
-            return items;
+        public Item mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Item item = new Item();
+            item.setId(rs.getInt("id"));
+            item.setName(rs.getString("name"));
+            item.setPrice(rs.getString("price"));
+            item.setDescription(rs.getString("description"));
+            item.setQuantity(rs.getInt("quantity"));
+            return item;
         }
 
     }

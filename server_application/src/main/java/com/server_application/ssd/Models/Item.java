@@ -2,9 +2,11 @@ package com.server_application.ssd.Models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="items")
-public class Items {
+public class Item {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -13,27 +15,28 @@ public class Items {
     private String name;
     private String price;
     private String description;
-    private int count;
-    private String imageUrl;
+    private int quantity;
+   @ElementCollection
+    private List<String> imageUrls;
 
-    public Items() {
+    public Item() {
     }
 
-    public Items(int id, String name, String price, String description, int count, String imageUrl) {
+    public Item(int id, String name, String price, String description, int quantity, List<String> imageUrls) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
-        this.count = count;
-        this.imageUrl = imageUrl;
+        this.quantity = quantity;
+        this.imageUrls = imageUrls;
     }
 
-    public Items(String name, String price, String description, int count, String imageUrl) {
+    public Item(String name, String price, String description, int quantity, List<String> imageUrls) {
         this.name = name;
         this.price = price;
         this.description = description;
-        this.count = count;
-        this.imageUrl = imageUrl;
+        this.quantity = quantity;
+        this.imageUrls = imageUrls;
     }
 
     public int getId() {
@@ -68,19 +71,19 @@ public class Items {
         this.description = description;
     }
 
-    public int getCount() {
-        return count;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setQuantity(int count) {
+        this.quantity = count;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public List<String> getImageUrls() {
+        return imageUrls;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageUrls(List<String> imageUrl) {
+        this.imageUrls = imageUrl;
     }
 }
