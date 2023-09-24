@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+import { createItem } from "../../../services/itemService";
 
 export default class CreateNewItem extends Component {
   state = {
     itemName: "",
-    price: "",
-    quantity: "",
+    price: 0,
+    quantity: 0,
     description: "",
     imageFiles: [],
     imagePreviews: [],
@@ -43,31 +44,32 @@ export default class CreateNewItem extends Component {
     }
   };
 
-  handleAddItem = () => {
-    // Handle adding the item to the database here, including the image files
+  handleAddItem = async () => {
     const newItem = {
-      itemName: this.state.itemName,
+      name: this.state.itemName,
       price: this.state.price,
       quantity: this.state.quantity,
       description: this.state.description,
-      imageFiles: this.state.imageFiles, // You can send the image files to the backend for storage
+      imageUrls: this.state.imagePreviews,
     };
-
-    // Perform an API call or database insert here
-
-    // Clear the form fields and image previews after adding
-    this.setState({
-      itemName: "",
-      price: "",
-      quantity: "",
-      description: "",
-      imageFiles: [],
-      imagePreviews: [],
-    });
+    await createItem(newItem)
+      .then(() => {
+        alert("Added Successfully!");
+         this.setState({
+           itemName: "",
+           price: "",
+           quantity: "",
+           description: "",
+           imageFiles: [],
+           imagePreviews: [],
+         });
+      })
+      .catch((err) => console.log(err));
+   
   };
 
   render() {
-    console.log(this.state.imagePreviews);
+    const item = this.state;
     return (
       <div
         style={{
@@ -90,13 +92,15 @@ export default class CreateNewItem extends Component {
             </center>
           </div>
           <form>
-            <div style={{ overflow:"auto",  height:'49vh', marginBottom:'1rem'}}>
-              <div class="mb-3">
-                <label for="formFileMultiple" class="form-label">
+            <div
+              style={{ overflow: "auto", height: "49vh", marginBottom: "1rem" }}
+            >
+              <div className="mb-3">
+                <label htmlFor="formFileMultiple" className="form-label">
                   Upload Product Images
                 </label>
                 <input
-                  class="form-control"
+                  className="form-control"
                   type="file"
                   id="formFileMultiple"
                   accept="image/*"
@@ -106,9 +110,15 @@ export default class CreateNewItem extends Component {
               </div>
 
               {this.state.imagePreviews.length > 0 && (
-                <div style={{ display: "flex", flexDirection: "row", overflow:'auto' }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    overflow: "auto",
+                  }}
+                >
                   {this.state.imagePreviews.map((preview, index) => (
-                    <div key={index} style={{marginRight:'0.5rem'}}>
+                    <div key={index} style={{ marginRight: "0.5rem" }}>
                       <img
                         src={preview}
                         alt={`Preview ${index + 1}`}
@@ -119,43 +129,66 @@ export default class CreateNewItem extends Component {
                 </div>
               )}
 
-              <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
                   Item Name
                 </label>
                 <input
                   type="email"
-                  class="form-control"
-                  id="exampleFormControlInput1"
+                  className="form-control"
+                  name="itemName"
+                  value={item.itemName}
+                  onChange={(e) => this.handleInputChange(e)}
                 />
               </div>
-              <label for="exampleFormControlInput1" class="form-label">
+              <label htmlFor="exampleFormControlInput1" className="form-label">
                 Price
               </label>
-              <div class="input-group mb-3">
+              <div className="input-group mb-3">
                 <br />
-                <span class="input-group-text">LKR</span>
-                <input type="number" class="form-control" aria-label="Amount" />
-                <span class="input-group-text">.00</span>
+                <span className="input-group-text">LKR</span>
+                <input
+                  type="number"
+                  className="form-control"
+                  aria-label="Amount"
+                  name="price"
+                  value={item.price}
+                  onChange={(e) => this.handleInputChange(e)}
+                />
+                <span className="input-group-text">.00</span>
               </div>
-              <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
                   Quantity
                 </label>
                 <input
                   type="number"
-                  class="form-control"
-                  id="exampleFormControlInput1"
+                  className="form-control"
+                  name="quantity"
+                  value={item.quantity}
+                  onChange={(e) => this.handleInputChange(e)}
                 />
               </div>
-              <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlTextarea1"
+                  className="form-label"
+                >
                   Description
                 </label>
                 <textarea
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlTextarea1"
                   rows="3"
+                  name="description"
+                  value={item.description}
+                  onChange={(e) => this.handleInputChange(e)}
                 ></textarea>
               </div>
             </div>

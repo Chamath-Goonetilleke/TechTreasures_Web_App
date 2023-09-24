@@ -1,11 +1,21 @@
 package com.server_application.ssd.Models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.nio.charset.StandardCharsets;
+import java.sql.Blob;
 import java.util.List;
 
 @Entity
 @Table(name="items")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Item {
 
     @Id
@@ -16,74 +26,10 @@ public class Item {
     private String price;
     private String description;
     private int quantity;
-   @ElementCollection
+
+    @ElementCollection
+    @Column(name = "imageUrls", columnDefinition = "LONGTEXT")
     private List<String> imageUrls;
 
-    public Item() {
-    }
-
-    public Item(int id, String name, String price, String description, int quantity, List<String> imageUrls) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.description = description;
-        this.quantity = quantity;
-        this.imageUrls = imageUrls;
-    }
-
-    public Item(String name, String price, String description, int quantity, List<String> imageUrls) {
-        this.name = name;
-        this.price = price;
-        this.description = description;
-        this.quantity = quantity;
-        this.imageUrls = imageUrls;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int count) {
-        this.quantity = count;
-    }
-
-    public List<String> getImageUrls() {
-        return imageUrls;
-    }
-
-    public void setImageUrls(List<String> imageUrl) {
-        this.imageUrls = imageUrl;
-    }
 }
+

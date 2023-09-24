@@ -100,8 +100,8 @@ function Header() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <NavLink to={urls[pages.indexOf(page)]}>
+              {pages.map((page, index) => (
+                <NavLink key={index} to={urls[pages.indexOf(page)]}>
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
@@ -129,8 +129,8 @@ function Header() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <NavLink to={urls[pages.indexOf(page)]}>
+            {pages.map((page, index) => (
+              <NavLink key={index} to={urls[pages.indexOf(page)]}>
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}

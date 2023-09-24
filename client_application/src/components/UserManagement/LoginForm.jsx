@@ -31,6 +31,7 @@ export default class LoginForm extends Component {
             "\nid : " +
             data.id
         );
+        window.location = "/home";
       })
       .catch((err) => alert(err.response.data));
   };
