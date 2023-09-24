@@ -4,6 +4,10 @@ import LoginPage from "./components/UserManagement/loginPage";
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import AdminPage from "./components/UserManagement/AdminPanel/AdminPage";
+import HomePage from "./components/Home/HomePage";
+import Item from "./components/Item/Item";
+
+
 
 export default class App extends Component {
   render() {
@@ -13,6 +17,8 @@ export default class App extends Component {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/item/:id" element={<Item />} />
         </Routes>
         <Footer />
       </React.Fragment>
