@@ -6,9 +6,9 @@ import Footer from "./components/common/Footer";
 import AdminPage from "./components/UserManagement/AdminPanel/AdminPage";
 import HomePage from "./components/Home/HomePage";
 import Item from "./components/Item/Item";
+import Cart from "./components/Cart/Cart";
 
 
-import Home from "./components/common/Home";
 
 export default class App extends Component {
   render() {
@@ -20,7 +20,7 @@ export default class App extends Component {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/item/:id" element={<Item />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
         <Footer />
       </React.Fragment>
