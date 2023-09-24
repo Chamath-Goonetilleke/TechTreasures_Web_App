@@ -3,6 +3,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import CreateNewItem from "./CreateNewItem";
+import Orders from "./OrdersPage";
 
 export default function AdminPage() {
   const [value, setValue] = React.useState("two");
@@ -34,7 +35,7 @@ export default function AdminPage() {
         </Box>
       </div>
       <div>
-        {value === "one" ? <></> : value === "two" ? <CreateNewItem/> : value === "three" ? <CreateNewItem/> : value === "four" ? <CreateNewItem/>: <></>}
+        {value === "one" ? <></> : value === "two" ? <CreateNewItem/> : value === "three" ? <Orders/> : value === "four" ? <CreateNewItem/>: <></>}
       </div>
     </div>
   );

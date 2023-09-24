@@ -4,6 +4,7 @@ import com.server_application.ssd.Models.Item;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,6 +20,7 @@ public class ItemService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Transactional
     public void createNewItem(Item item){
 
         String insertItemSql = "INSERT INTO items (name, price, description, quantity) VALUES (?, ?, ?, ?)";

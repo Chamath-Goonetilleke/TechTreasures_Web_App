@@ -1,66 +1,125 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
+import { crateUser } from "../../services/userService";
 
 export default class RegisterForm extends Component {
-  render() {
+  state = {
+    data: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  };
 
+  handleChange = (e) => {
+    let data = this.state.data;
+    const name = e.target.name;
+    const value = e.target.value;
+
+    data[name] = value;
+    this.setState({ data: data });
+  };
+
+  onSubmit = async () => {
+    await crateUser(this.state.data)
+      .then(() => {
+        alert("Register Success!");
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
+  };
+
+  render() {
+    const { data } = this.state;
     return (
       <div
         className="formContainer"
         style={{
+          display: "flex",
           flex: 1,
           border: "1px solid black",
           margin: "1rem",
           height: "100%",
-          padding: "2rem",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <form>
-          <center>
-            <div
-              style={{ fontSize: "20px", margin: "1rem", marginBottom: "2rem" }}
-            >
-              Please create a new account
+        <div>
+          <form>
+            <center>
+              <div
+                style={{
+                  fontSize: "22px",
+                  margin: "1rem",
+                  marginBottom: "8rem",
+                }}
+              >
+                Please Create a New Account
+              </div>
+            </center>
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="form-label">
+                Name
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="name"
+                value={data.name}
+                onChange={(e) => this.handleChange(e)}
+              />
             </div>
-          </center>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">
-              Email address
-            </label>
-            <input
-              type="email"
-              class="form-control"
-              id="exampleFormControlInput1"
-              placeholder="name@example.com"
-            />
-          </div>
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="form-label">
+                Email address
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                placeholder="name@example.com"
+                name="email"
+                value={data.email}
+                onChange={(e) => this.handleChange(e)}
+              />
+            </div>
 
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">
-              Password
-            </label>
-            <input
-              type="password"
-              class="form-control"
-              id="exampleFormControlInput1"
-            />
-          </div>
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="form-label">
+                Password
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                name="password"
+                value={data.password}
+                onChange={(e) => this.handleChange(e)}
+              />
+            </div>
 
+            <center>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => {
+                  this.onSubmit();
+                }}
+              >
+                Register
+              </button>
+            </center>
+          </form>
           <center>
-            <button type="button" class="btn btn-primary">
-              Register
-            </button>
             <div>
               Already have an Account?
               <button
                 type="button"
-                class="btn btn-link"
+                className="btn btn-link"
                 onClick={this.props.onRegisterClick}
               >
                 Login
               </button>
             </div>
           </center>
-        </form>
+        </div>
       </div>
     );
   }

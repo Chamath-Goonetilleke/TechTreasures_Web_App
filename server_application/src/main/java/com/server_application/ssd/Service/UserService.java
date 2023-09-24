@@ -1,5 +1,6 @@
 package com.server_application.ssd.Service;
 
+import com.server_application.ssd.DTO.AuthUser;
 import com.server_application.ssd.Models.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -28,9 +29,25 @@ public class UserService {
         );
     }
 
+    public User auth(AuthUser authUser){
+
+        User user = getUserByEmail(authUser.getEmail());
+        if (user != null && user.getPassword().equals(authUser.getPassword())){
+            return user;
+        }
+
+        return null;
+
+    }
+
     public User getUserById(int userId) {
         String selectUserSql = "SELECT * FROM user WHERE id = ?";
         return jdbcTemplate.queryForObject(selectUserSql, new UserRowMapper(), userId);
+    }
+
+    public User getUserByEmail(String email) {
+        String selectUserSql = "SELECT * FROM user WHERE email = ?";
+        return jdbcTemplate.queryForObject(selectUserSql, new UserRowMapper(), email);
     }
 
     public void updateUser(User user) {

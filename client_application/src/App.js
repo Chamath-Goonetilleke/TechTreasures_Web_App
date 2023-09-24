@@ -8,6 +8,7 @@ import HomePage from "./components/Home/HomePage";
 import Item from "./components/Item/Item";
 
 
+import Home from "./components/common/Home";
 
 export default class App extends Component {
   render() {
@@ -19,6 +20,7 @@ export default class App extends Component {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/item/:id" element={<Item />} />
+          <Route path="/home" element={<Home />} />
         </Routes>
         <Footer />
       </React.Fragment>

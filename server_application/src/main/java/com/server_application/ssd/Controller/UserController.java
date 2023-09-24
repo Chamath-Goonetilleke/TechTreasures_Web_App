@@ -1,5 +1,6 @@
 package com.server_application.ssd.Controller;
 
+import com.server_application.ssd.DTO.AuthUser;
 import com.server_application.ssd.Models.User;
 import com.server_application.ssd.Service.UserService;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,15 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @PostMapping("/auth")
+    public ResponseEntity<?> authUser(@RequestBody AuthUser authUser){
+        User user = userService.auth(authUser);
+        if (user != null){
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Login Unsuccessful", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/createUser")
