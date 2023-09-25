@@ -43,20 +43,9 @@ public class ItemController {
         return new ResponseEntity<>("Updated Successfully", HttpStatus.OK);
     }
 
-    @DeleteMapping("/deleteItem/{itemId}")
+    @GetMapping("/deleteItem/{itemId}")
     public ResponseEntity<String> deleteItem(@PathVariable int itemId) {
         itemService.deleteItem(itemId);
         return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
     }
-//    @PostMapping("/insert-cart")
-//    public void insertData(@RequestBody Cart cart) {
-//        System.out.println("Cart: "+cart.getItemId());
-//        itemService.insertData(cart);
-//    }
-//
-//    @PostMapping("/insert-card")
-//    public void insertData(@RequestBody Card card) {
-//        System.out.println("Card: "+card.getCardNo());
-//        itemService.insertCardData(card);
-//    }
 }

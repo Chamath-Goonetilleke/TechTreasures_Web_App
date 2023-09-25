@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { crateUser } from "../../services/userService";
+import SnackbarComponent from "../common/SnackbarComponent";
+import { Alert } from "@mui/material";
 
 export default class RegisterForm extends Component {
   state = {
@@ -8,6 +10,17 @@ export default class RegisterForm extends Component {
       email: "",
       password: "",
     },
+    snackOpen: false,
+    snackMessage: "",
+  };
+
+  handleSnackClose = () => {
+    this.setState({ snackOpen: false });
+  };
+
+  openSnackbar = (message) => {
+    this.setState({ snackMessage: message });
+    this.setState({ snackOpen: true });
   };
 
   handleChange = (e) => {
@@ -22,7 +35,9 @@ export default class RegisterForm extends Component {
   onSubmit = async () => {
     await crateUser(this.state.data)
       .then(() => {
-        alert("Register Success!");
+        this.openSnackbar(
+          <Alert severity="success">Registered Successfully</Alert>
+        );
         window.location.reload();
       })
       .catch((err) => console.log(err));
@@ -120,6 +135,11 @@ export default class RegisterForm extends Component {
             </div>
           </center>
         </div>
+        <SnackbarComponent
+          open={this.state.snackOpen}
+          handleClose={this.handleSnackClose}
+          message={this.state.snackMessage}
+        />
       </div>
     );
   }

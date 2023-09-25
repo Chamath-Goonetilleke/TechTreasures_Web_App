@@ -13,6 +13,8 @@ import {
 } from "../../../services/orderService";
 import Button from "@mui/material/Button";
 import OrderDetailsModal from "./OrderDialogBox";
+import SnackbarComponent from "../../common/SnackbarComponent";
+import { Alert } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -39,6 +41,8 @@ export default class Orders extends Component {
     rows: [],
     isModalOpen: false,
     selectedOrder: null,
+    snackOpen: false,
+    snackMessage: "",
   };
 
   componentDidMount = async () => {
@@ -51,7 +55,6 @@ export default class Orders extends Component {
   };
 
   createRow = (orders) => {
-    let row = [];
     let rows = [];
 
     for (let i = 0; i < orders.length; i++) {
@@ -78,9 +81,21 @@ export default class Orders extends Component {
     this.setState({ isModalOpen: false, selectedOrder: null });
   };
 
+  handleSnackClose = () => {
+    this.setState({ snackOpen: false });
+  };
+
+  openSnackbar = (message) => {
+    this.setState({ snackMessage: message });
+    this.setState({ snackOpen: true });
+  };
+
   completeOrder = async (orderId) => {
     await completeOrderById(orderId)
-      .then(({ data }) => alert(data))
+      .then(() => {
+        this.openSnackbar(<Alert severity="success">Order Completed</Alert>);
+        window.location.reload();
+      })
       .catch((error) => console.log(error));
   };
 
@@ -158,6 +173,11 @@ export default class Orders extends Component {
               onClose={this.closeModal}
             />
           )}
+          <SnackbarComponent
+            open={this.state.snackOpen}
+            handleClose={this.handleSnackClose}
+            message={this.state.snackMessage}
+          />
         </div>
       )
     );

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { createItem } from "../../../services/itemService";
+import { Alert } from "@mui/material";
+import SnackbarComponent from "../../common/SnackbarComponent";
 
 export default class CreateNewItem extends Component {
   state = {
@@ -9,6 +11,8 @@ export default class CreateNewItem extends Component {
     description: "",
     imageFiles: [],
     imagePreviews: [],
+    snackOpen: false,
+    snackMessage: "",
   };
 
   handleInputChange = (event) => {
@@ -54,18 +58,26 @@ export default class CreateNewItem extends Component {
     };
     await createItem(newItem)
       .then(() => {
-        alert("Added Successfully!");
-         this.setState({
-           itemName: "",
-           price: "",
-           quantity: "",
-           description: "",
-           imageFiles: [],
-           imagePreviews: [],
-         });
+        this.openSnackbar(<Alert severity="success">Added Successfully</Alert>);
+        this.setState({
+          itemName: "",
+          price: "",
+          quantity: "",
+          description: "",
+          imageFiles: [],
+          imagePreviews: [],
+        });
       })
       .catch((err) => console.log(err));
-   
+  };
+
+  handleSnackClose = () => {
+    this.setState({ snackOpen: false });
+  };
+
+  openSnackbar = (message) => {
+    this.setState({ snackMessage: message });
+    this.setState({ snackOpen: true });
   };
 
   render() {
@@ -214,6 +226,11 @@ export default class CreateNewItem extends Component {
             </center>
           </form>
         </div>
+        <SnackbarComponent
+          open={this.state.snackOpen}
+          handleClose={this.handleSnackClose}
+          message={this.state.snackMessage}
+        />
       </div>
     );
   }
