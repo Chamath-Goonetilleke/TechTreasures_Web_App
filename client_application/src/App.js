@@ -9,9 +9,6 @@ import Item from "./components/Item/Item";
 import Cart from "./components/Cart/Cart";
 import Payment from "./components/Payment/payment";
 
-
-
-import Home from "./components/common/Home";
 import ProfilePage from "./components/UserManagement/Profile/ProfilePage";
 
 export default class App extends Component {
