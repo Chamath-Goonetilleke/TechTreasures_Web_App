@@ -8,40 +8,41 @@ import ButtonBase from "@mui/material/ButtonBase";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import "./payment.css";
+import { getCartByUserId } from "../../services/CartService";
 
-const data = [
-  {
-    id: 0,
-    name: "testt estte sttest",
-    price: "20",
-    description:
-      "test test test test test test test test test test test test  test test test test test test test test ",
-    quantity: 0,
-    imageUrls: [
-      "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
-    ],
-  },
-  {
-    id: 1,
-    name: "test",
-    price: "10",
-    description: "test",
-    quantity: 0,
-    imageUrls: [
-      "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
-    ],
-  },
-  {
-    id: 2,
-    name: "test",
-    price: "10",
-    description: "test",
-    quantity: 0,
-    imageUrls: [
-      "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
-    ],
-  },
-];
+// const data = [
+//   {
+//     id: 0,
+//     name: "testt estte sttest",
+//     price: "20",
+//     description:
+//       "test test test test test test test test test test test test  test test test test test test test test ",
+//     quantity: 0,
+//     imageUrls: [
+//       "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
+//     ],
+//   },
+//   {
+//     id: 1,
+//     name: "test",
+//     price: "10",
+//     description: "test",
+//     quantity: 0,
+//     imageUrls: [
+//       "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
+//     ],
+//   },
+//   {
+//     id: 2,
+//     name: "test",
+//     price: "10",
+//     description: "test",
+//     quantity: 0,
+//     imageUrls: [
+//       "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
+//     ],
+//   },
+// ];
 const Img = styled("img")({
   margin: "auto",
   display: "block",
@@ -62,6 +63,17 @@ const Payment = () => {
   const [dataCity, setToalCity] = useState(0);
   const [dataPin, setToalPin] = useState(0);
   const [dataCountry, setToalCountry] = useState(0);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    function loadAllItems() {
+      getCartByUserId(1).then(({ data }) => {
+        setData(data);
+      });
+    }
+    loadAllItems();
+    totalCalculate();
+  }, []);
 
   const totalCalculate = () => {
     let total = 0;
@@ -73,9 +85,24 @@ const Payment = () => {
     setToalCount(total);
     setToalQuantity(count);
   };
-  useEffect(() => {
-    totalCalculate();
-  });
+  const createPayment = () => {
+    const data = {
+      id: 0,
+      userId: 1,
+      cardNo: dataCardNo,
+      holderName: dataCardName,
+      expireDate: dataExpireDte,
+      cvc: dataCvc,
+      email: dataEmail,
+      address1: dataAddress1,
+      address2: dataAddress2,
+      country: dataCountry,
+      city: dataCity,
+      pin: dataPin,
+      state: dataState
+    };
+    console.log("_________",data)
+  };
   return (
     <div>
       <div>
@@ -232,22 +259,28 @@ const Payment = () => {
                     onChange={(event) => setToalCountry(event.target.value)}
                     value={dataCountry}
                   />
+                  <br />
+                  <br />
                   <TextField
                     label="Address line 1"
                     id="outlined-size-small"
                     size="small"
                     className="textFieldStylingPayment"
                     onChange={(event) => setToalAddress1(event.target.value)}
-                    value={dataEmail}
+                    value={dataAddress1}
                   />
+                  <br />
+                  <br />
                   <TextField
                     label="Address line 2"
                     id="outlined-size-small"
                     size="small"
                     className="textFieldStylingPayment"
-                    onChange={(event) => setToalEmail(event.target.value)}
-                    value={dataEmail}
+                    onChange={(event) => setToalAddress2(event.target.value)}
+                    value={dataAddress2}
                   />
+                  <br />
+                  <br />
                   <Stack
                     spacing={2}
                     direction="row"
@@ -258,31 +291,34 @@ const Payment = () => {
                       id="outlined-size-small"
                       size="small"
                       className="textField2StylingPayment"
-                      onChange={(event) => setToalEmail(event.target.value)}
-                      value={dataEmail}
+                      onChange={(event) => setToalCity(event.target.value)}
+                      value={dataCity}
                     />
                     <TextField
                       label="PIN"
                       id="outlined-size-small"
                       size="small"
                       className="textField2StylingPayment"
-                      onChange={(event) => setToalEmail(event.target.value)}
-                      value={dataEmail}
+                      onChange={(event) => setToalPin(event.target.value)}
+                      value={dataPin}
                     />
                   </Stack>
+                  <br />
+                  <br />
                   <TextField
                     label="State"
                     id="outlined-size-small"
                     size="small"
                     className="textFieldStylingPayment"
-                    onChange={(event) => setToalEmail(event.target.value)}
-                    value={dataEmail}
+                    onChange={(event) => setToalState(event.target.value)}
+                    value={dataState}
                   />
                   <br />
                   <br />
                   <Button
                     variant="contained"
                     className="textFieldStylingPayment"
+                    onClick={createPayment()}
                   >
                     pay
                   </Button>

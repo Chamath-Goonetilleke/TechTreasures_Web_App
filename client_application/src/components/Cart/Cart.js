@@ -8,39 +8,40 @@ import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-const data = [
-  {
-    id: 0,
-    name: "testt estte sttest",
-    price: "20",
-    description:
-      "test test test test test test test test test test test test  test test test test test test test test ",
-    quantity: 0,
-    imageUrls: [
-      "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
-    ],
-  },
-  {
-    id: 1,
-    name: "test",
-    price: "10",
-    description: "test",
-    quantity: 0,
-    imageUrls: [
-      "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
-    ],
-  },
-  {
-    id: 2,
-    name: "test",
-    price: "10",
-    description: "test",
-    quantity: 0,
-    imageUrls: [
-      "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
-    ],
-  },
-];
+import { getCartByUserId } from "../../services/CartService";
+// const data = [
+//   {
+//     id: 0,
+//     name: "testt estte sttest",
+//     price: "20",
+//     description:
+//       "test test test test test test test test test test test test  test test test test test test test test ",
+//     quantity: 0,
+//     imageUrls: [
+//       "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
+//     ],
+//   },
+//   {
+//     id: 1,
+//     name: "test",
+//     price: "10",
+//     description: "test",
+//     quantity: 0,
+//     imageUrls: [
+//       "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
+//     ],
+//   },
+//   {
+//     id: 2,
+//     name: "test",
+//     price: "10",
+//     description: "test",
+//     quantity: 0,
+//     imageUrls: [
+//       "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
+//     ],
+//   },
+// ];
 const Img = styled("img")({
   margin: "auto",
   display: "block",
@@ -52,6 +53,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const [totalCount, setToalCount] = useState(0);
   const [totalQuantity, setToalQuantity] = useState(0);
+  const [data, setData] = useState([]);
   const totalCalculate = () => {
     let total = 0;
     let count = 0;
@@ -61,11 +63,23 @@ const Cart = () => {
     }
     setToalCount(total);
     setToalQuantity(count);
-    navigate("/payment");
+    
   };
-  useEffect(() => {
-    // totalCalculate()
-  });
+
+  useEffect(()=>{
+    function loadAllItems(){
+      getCartByUserId(1).then(({ data }) => {
+        setData(data);
+        totalCalculate();
+      });
+    }
+    loadAllItems();
+    
+  },[]);
+  
+  const buyNow = () =>{
+    navigate("/payment");
+  }
   return (
     <div>
       <div>
@@ -148,7 +162,7 @@ const Cart = () => {
                   </Stack>
                 </Stack>
               </div>
-              <Button variant="contained" onClick={totalCalculate}>
+              <Button variant="contained" onClick={buyNow}>
                 Buy Now
               </Button>
             </td>
