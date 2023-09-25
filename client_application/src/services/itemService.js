@@ -13,3 +13,8 @@ export async function getAllItems(){
 export async function deleteItem(itemId){
   return await http.get(endpoint + `/deleteItem/${itemId}`);
 }
+
+export async function getItemById(id) {
+  console.log("............")
+  return await http.get(endpoint + `/getItem/${id}`);
+}
