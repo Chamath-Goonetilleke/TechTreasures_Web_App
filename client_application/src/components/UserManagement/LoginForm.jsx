@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { authUser } from "../../services/userService";
-
+import Alert from "@mui/material/Alert";
+import SnackbarComponent from "../common/SnackbarComponent";
 export default class LoginForm extends Component {
   state = {
     data: {
       email: "",
       password: "",
     },
+    snackOpen: false,
+    snackMessage:"",
   };
 
   handleChange = (e) => {
@@ -18,22 +21,26 @@ export default class LoginForm extends Component {
     this.setState({ data: data });
   };
 
+  handleSnackClose = () => {
+    this.setState({ snackOpen: false });
+  };
+
+  openSnackbar = (message) => {
+    this.setState({ snackMessage: message });
+    this.setState({ snackOpen: true });
+  };
+
   onSubmit = async () => {
     await authUser(this.state.data)
       .then(({ data }) => {
-        alert(
-          "email : " +
-            data.email +
-            "\nname : " +
-            data.name +
-            "\nrole : " +
-            data.userRole +
-            "\nid : " +
-            data.id
-        );
-        window.location = "/home";
+        const jsonString = JSON.stringify(data);
+        window.localStorage.setItem("user", jsonString);
+        this.openSnackbar(<Alert severity="success">Welcome {data.name}!</Alert>);
+        setTimeout(() => {
+          window.location = "/home";
+        }, 1000);
       })
-      .catch((err) => alert(err.response.data));
+      .catch((err) => this.openSnackbar(<Alert severity="error">{err.response.data}</Alert>));
   };
 
   render() {
@@ -108,6 +115,11 @@ export default class LoginForm extends Component {
             </div>
           </center>
         </form>
+        <SnackbarComponent
+          open={this.state.snackOpen}
+          handleClose={this.handleSnackClose}
+          message={this.state.snackMessage}
+        />
       </div>
     );
   }

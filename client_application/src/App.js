@@ -9,6 +9,8 @@ import Item from "./components/Item/Item";
 import Cart from "./components/Cart/Cart";
 
 
+import Home from "./components/common/Home";
+import ProfilePage from "./components/UserManagement/Profile/ProfilePage";
 
 export default class App extends Component {
   render() {
@@ -21,6 +23,7 @@ export default class App extends Component {
           <Route path="/home" element={<HomePage />} />
           <Route path="/item/:id" element={<Item />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<ProfilePage/>} />
         </Routes>
         <Footer />
       </React.Fragment>

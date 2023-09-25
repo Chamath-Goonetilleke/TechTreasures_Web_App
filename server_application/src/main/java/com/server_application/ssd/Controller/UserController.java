@@ -39,7 +39,7 @@ public class UserController {
 
     }
 
-    @PutMapping("/updateUser")
+    @PostMapping("/updateUser")
     public ResponseEntity<String> updateUser(@RequestBody User user){
         userService.updateUser(user);
         return new ResponseEntity<>("User Updated Successfully", HttpStatus.OK);

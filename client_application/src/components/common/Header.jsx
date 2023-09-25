@@ -14,19 +14,36 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink } from "react-router-dom";
 
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
+
 const pages = ["Home", "About Us", "Contacts Us"];
-const urls = ["/home", "/about", "/contact"]
-const settings = [{ screen: "Profile", path: "/login" }];
+const urls = ["/home", "/about", "/contact"];
+const settings = [];
 
-const storage = window.localStorage;
+const user = JSON.parse(localStorage.getItem("user"));
 
-if (storage.getItem("userId")) {
-  if (storage.getItem("userRole") === "Admin") {
-    settings.push({ screen: "Admin Panel", path: "/admin" });
+if (user != null) {
+  if (user.userRole === "ADMIN") {
+    settings.push({
+      screen: "Admin Panel",
+      path: "/admin",
+      icon: <AdminPanelSettingsIcon />,
+    });
   }
-  settings.push({ screen: "Logout", path: "/logout" });
+  settings.push({
+    screen: "Profile",
+    path: "/profile",
+    icon: <PersonOutlineIcon />,
+  });
 } else {
-  settings.push({ screen: "Sign in", path: "/login" });
+  settings.push({
+    screen: "Sign in",
+    path: "/login",
+    icon: <LoginIcon />,
+  });
 }
 
 function Header() {
@@ -145,7 +162,10 @@ function Header() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar
+                  alt={user !== null ? user.name : "Unknown"}
+                  src="/static/images/avatar/2.jpg"
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -164,13 +184,44 @@ function Header() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              {user !== null && (
+                <MenuItem
+                  style={{
+                    justifyContent: "center",
+                  }}
+                >
+                  <Button variant="text" style={{ color: "black" }}>
+                    {user.name}
+                  </Button>
+                </MenuItem>
+              )}
               {settings.map((setting, index) => (
-                <NavLink key={index} to={setting.path}>
+                <NavLink
+                  key={index}
+                  to={setting.path}
+                  style={{ textDecoration: "none" }}
+                >
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting.screen}</Typography>
+                    <Button variant="text" startIcon={setting.icon}>
+                      {setting.screen}
+                    </Button>
                   </MenuItem>
                 </NavLink>
               ))}
+              {user !== null && (
+                <MenuItem>
+                  <Button
+                    variant="text"
+                    startIcon={<LogoutIcon />}
+                    onClick={() => {
+                      localStorage.clear();
+                      window.location = "/login";
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
         </Toolbar>
