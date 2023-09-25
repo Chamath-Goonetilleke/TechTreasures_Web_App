@@ -7,6 +7,8 @@ import AdminPage from "./components/UserManagement/AdminPanel/AdminPage";
 import HomePage from "./components/Home/HomePage";
 import Item from "./components/Item/Item";
 import Cart from "./components/Cart/Cart";
+import Payment from "./components/Payment/payment";
+
 
 
 
@@ -21,6 +23,7 @@ export default class App extends Component {
           <Route path="/home" element={<HomePage />} />
           <Route path="/item/:id" element={<Item />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/payment" element={<Payment />} />
         </Routes>
         <Footer />
       </React.Fragment>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import './cart.css'
 import { styled } from '@mui/material/styles';
@@ -53,7 +53,11 @@ const Cart = () => {
         }
         setToalCount(total)
         setToalQuantity(count)
+        navigate('/payment')
     }
+    useEffect(()=>{
+      totalCalculate()
+  })
     return (
         <div>
             <div>
@@ -71,6 +75,7 @@ const Cart = () => {
         backgroundColor: (theme) =>
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
+      className='cartItemCardStyling'
     >
       <Grid container spacing={2}>
         <Grid item>
@@ -129,7 +134,6 @@ const Cart = () => {
                     </tr>
                 </table>
             </div>
-            Total{totalCount}
         <br/>
         </div>
     );
