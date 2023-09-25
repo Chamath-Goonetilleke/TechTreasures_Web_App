@@ -11,6 +11,8 @@ import Payment from "./components/Payment/payment";
 
 
 
+import Home from "./components/common/Home";
+import ProfilePage from "./components/UserManagement/Profile/ProfilePage";
 
 export default class App extends Component {
   render() {
@@ -24,6 +26,7 @@ export default class App extends Component {
           <Route path="/item/:id" element={<Item />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/profile" element={<ProfilePage/>} />
         </Routes>
         <Footer />
       </React.Fragment>

@@ -2,9 +2,11 @@ package com.server_application.ssd.Service;
 
 import com.server_application.ssd.DTO.AuthUser;
 import com.server_application.ssd.Models.User;
+import org.apache.commons.codec.binary.Hex;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,20 +21,25 @@ public class UserService {
     }
 
     public void createUser(User user) {
-        String insertUserSql = "INSERT INTO user (name, email, password, userRole) VALUES (?, ?, ?, ?)";
+        String insertUserSql = "INSERT INTO user (name, email, password, userRole, phoneNumber, address) VALUES (?, ?, ?, ?, ?, ?)";
+
+        String password = User.encrypt(user.getPassword());
+
         jdbcTemplate.update(
                 insertUserSql,
                 user.getName(),
                 user.getEmail(),
-                user.getPassword(),
-                User.UserRole.USER.toString()
+                password,
+                "USER",
+                null,
+                null
         );
     }
 
-    public User auth(AuthUser authUser){
+    public User auth(AuthUser authUser) {
 
         User user = getUserByEmail(authUser.getEmail());
-        if (user != null && user.getPassword().equals(authUser.getPassword())){
+        if (user != null && User.verify(authUser.getPassword(), user.getPassword())) {
             return user;
         }
 
@@ -51,13 +58,12 @@ public class UserService {
     }
 
     public void updateUser(User user) {
-        String updateUserSql = "UPDATE user SET name = ?, email = ?, password = ?, userRole = ? WHERE id = ?";
+        String updateUserSql = "UPDATE user SET name = ?, phoneNumber = ? , address = ? WHERE id = ?";
         jdbcTemplate.update(
                 updateUserSql,
                 user.getName(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getUserRole(),
+                user.getPhoneNumber(),
+                user.getAddress(),
                 user.getId()
         );
     }
@@ -77,6 +83,8 @@ public class UserService {
             user.setEmail(rs.getString("email"));
             user.setPassword(rs.getString("password"));
             user.setUserRole(rs.getString("userRole"));
+            user.setPhoneNumber(rs.getString("phoneNumber"));
+            user.setAddress(rs.getString("address"));
             return user;
         }
 

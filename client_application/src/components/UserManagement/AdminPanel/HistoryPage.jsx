@@ -8,7 +8,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import {
-  completeOrderById,
   getAllOrders,
 } from "../../../services/orderService";
 import Button from "@mui/material/Button";
@@ -33,7 +32,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default class Orders extends Component {
+export default class HistoryPage extends Component {
   state = {
     orders: [],
     rows: [],
@@ -51,12 +50,11 @@ export default class Orders extends Component {
   };
 
   createRow = (orders) => {
-    let row = [];
     let rows = [];
 
     for (let i = 0; i < orders.length; i++) {
       const order = orders[i];
-      if (!order.isComplete) {
+      if (order.isComplete) {
         rows.push({
           orderId: order.id,
           customer: order.customerId,
@@ -78,11 +76,7 @@ export default class Orders extends Component {
     this.setState({ isModalOpen: false, selectedOrder: null });
   };
 
-  completeOrder = async (orderId) => {
-    await completeOrderById(orderId)
-      .then(({ data }) => alert(data))
-      .catch((error) => console.log(error));
-  };
+  
 
   render() {
     console.log(this.state.orders);
@@ -135,15 +129,6 @@ export default class Orders extends Component {
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       {row.status}{" "}
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        color="error"
-                        style={{ marginLeft: "1rem" }}
-                        onClick={() => this.completeOrder(row.orderId)}
-                      >
-                        Mark as Complete
-                      </Button>
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}

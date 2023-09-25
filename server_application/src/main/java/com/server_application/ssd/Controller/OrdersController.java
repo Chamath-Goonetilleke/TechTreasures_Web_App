@@ -36,7 +36,7 @@ public class OrdersController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    @PutMapping("/completeOrder/{orderId}")
+    @PostMapping("/completeOrder/{orderId}")
     public ResponseEntity<String> completeOrder(@PathVariable int orderId){
         orderService.completeOrder(orderId);
         return new ResponseEntity<>("Successfully Completed", HttpStatus.OK);
