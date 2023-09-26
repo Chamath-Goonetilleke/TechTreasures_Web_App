@@ -1,15 +1,13 @@
 package com.server_application.ssd.Controller;
 
+import com.server_application.ssd.Models.Cart;
 import com.server_application.ssd.Models.Item;
 import com.server_application.ssd.Service.CartService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +20,10 @@ public class CartController {
     @GetMapping("/getCart/{userId}")
     public ResponseEntity<List<Item>> getCartById(@PathVariable int userId) {
         return new ResponseEntity<>(cartService.getCartById(userId), HttpStatus.OK);
+    }
+    @PostMapping("/insertCart")
+    public ResponseEntity<String> insertItem(@RequestBody Cart cart) {
+        cartService.createNewCart(cart);
+        return new ResponseEntity<>("Successfully insert", HttpStatus.OK);
     }
 }

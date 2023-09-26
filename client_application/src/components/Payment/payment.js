@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import "./payment.css";
 import { getCartByUserId } from "../../services/CartService";
+import { createOrder } from "../../services/orderService";
+import { createPayment } from "../../services/paymentService";
 
 // const data = [
 //   {
@@ -52,40 +54,67 @@ const Img = styled("img")({
 const Payment = () => {
   const [totalCount, setToalCount] = useState(0);
   const [totalQuantity, setToalQuantity] = useState(0);
-  const [dataEmail, setToalEmail] = useState(0);
-  const [dataCardNo, setToalCardNo] = useState(0);
-  const [dataExpireDte, setToalExpireDte] = useState(0);
-  const [dataCvc, setToalCvc] = useState(0);
-  const [dataCardName, setToalCardName] = useState(0);
-  const [dataAddress1, setToalAddress1] = useState(0);
-  const [dataAddress2, setToalAddress2] = useState(0);
-  const [dataState, setToalState] = useState(0);
-  const [dataCity, setToalCity] = useState(0);
-  const [dataPin, setToalPin] = useState(0);
-  const [dataCountry, setToalCountry] = useState(0);
+  const [dataEmail, setToalEmail] = useState("");
+  const [dataCardNo, setToalCardNo] = useState("");
+  const [dataExpireDte, setToalExpireDte] = useState("");
+  const [dataCvc, setToalCvc] = useState("");
+  const [dataCardName, setToalCardName] = useState("");
+  const [dataAddress1, setToalAddress1] = useState("");
+  const [dataAddress2, setToalAddress2] = useState("");
+  const [dataState, setToalState] = useState("");
+  const [dataCity, setToalCity] = useState("");
+  const [dataPin, setToalPin] = useState("");
+  const [dataCountry, setToalCountry] = useState("");
   const [data, setData] = useState([]);
+  const [itemData, setItemData] = useState([])
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const id = user.id;
 
   useEffect(() => {
     function loadAllItems() {
-      getCartByUserId(1).then(({ data }) => {
+      getCartByUserId(id).then(({ data }) => {
         setData(data);
+        let total = 0;
+        let count = 0;
+        let itemArray = []
+        for (let index = 0; index < data.length; index++) {
+          total = total + parseInt(data[index].price);
+          const ids = data[index].id
+          let string_id = ids.toString();
+          itemArray.push(string_id)
+          count++;
+        }
+        setItemData(itemArray)
+        setToalCount(total);
+        setToalQuantity(count);
       });
+      // totalCalculate();
     }
     loadAllItems();
-    totalCalculate();
+    
   }, []);
-
+// jhfff
   const totalCalculate = () => {
     let total = 0;
     let count = 0;
+    let itemArray = []
     for (let index = 0; index < data.length; index++) {
       total = total + parseInt(data[index].price);
+      const ids = data[index].id
+      let string_id = ids.toString();
+      itemArray.push(string_id)
       count++;
     }
+    setItemData(itemArray)
     setToalCount(total);
     setToalQuantity(count);
   };
-  const createPayment = () => {
+  async function createPayments() {
+    // e.stopPropagation();
+    // e.preventDefault()
+    // if (e && e.preventDefault) { e.preventDefault(); }
+    createOrders();
     const data = {
       id: 0,
       userId: 1,
@@ -101,8 +130,36 @@ const Payment = () => {
       pin: dataPin,
       state: dataState
     };
-    console.log("_________",data)
+    console.log("_________",data);
+    await createPayment(data)
+    .then(() => {
+      alert("Payment Added");
+    })
+    .catch((err) => console.log(err));
   };
+  async function createOrders(){
+    // e.preventDefault();
+    // e.stopPropagation();
+    // if (e && e.preventDefault) { e.preventDefault(); }
+    // e.preventDefault()
+    const date = new Date();
+    let currentDay= String(date.getDate()).padStart(2, '0');
+    let currentMonth = String(date.getMonth()+1).padStart(2,"0");
+    let currentYear = date.getFullYear();
+    let currentDate = `${currentDay}-${currentMonth}-${currentYear}`;
+    const data = {
+      customerId: 1,
+      orderedItems: itemData,
+      totalAmount: totalCount,
+      orderedDate: currentDate,
+      isComplete: false
+    }
+    await createOrder(data)
+    .then(() => {
+      alert("Order Added");
+    })
+    .catch((err) => console.log(err));
+  }
   return (
     <div>
       <div>
@@ -318,7 +375,7 @@ const Payment = () => {
                   <Button
                     variant="contained"
                     className="textFieldStylingPayment"
-                    onClick={createPayment()}
+                    onClick={createPayments}
                   >
                     pay
                   </Button>

@@ -9,3 +9,6 @@ export async function getAllOrders(){
 export async function completeOrderById(orderId){
     return await http.post(endpoint + `/completeOrder/${orderId}`);
 }
+export async function createOrder(data){
+    return await http.post(endpoint + `/createOrder`, data);
+}

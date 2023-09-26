@@ -18,6 +18,7 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const pages = ["Home", "About Us", "Contacts Us"];
 const urls = ["/home", "/about", "/contact"];
@@ -158,7 +159,11 @@ function Header() {
               </NavLink>
             ))}
           </Box>
-
+          <IconButton style={{marginRight: '2rem', color: 'white'}} onClick={() => {
+                      window.location = "/cart";
+                    }}>
+          <ShoppingCartIcon/>
+          </IconButton>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

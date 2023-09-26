@@ -8,40 +8,8 @@ import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { getCartByUserId } from "../../services/CartService";
-// const data = [
-//   {
-//     id: 0,
-//     name: "testt estte sttest",
-//     price: "20",
-//     description:
-//       "test test test test test test test test test test test test  test test test test test test test test ",
-//     quantity: 0,
-//     imageUrls: [
-//       "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
-//     ],
-//   },
-//   {
-//     id: 1,
-//     name: "test",
-//     price: "10",
-//     description: "test",
-//     quantity: 0,
-//     imageUrls: [
-//       "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
-//     ],
-//   },
-//   {
-//     id: 2,
-//     name: "test",
-//     price: "10",
-//     description: "test",
-//     quantity: 0,
-//     imageUrls: [
-//       "https://raw.githubusercontent.com/adrianhajdin/ecommerce_sanity_stripe/main/public/assets/earphones_a_1.webp",
-//     ],
-//   },
-// ];
+import { getCartByUserId, createCart } from "../../services/CartService";
+
 const Img = styled("img")({
   margin: "auto",
   display: "block",
@@ -54,6 +22,8 @@ const Cart = () => {
   const [totalCount, setToalCount] = useState(0);
   const [totalQuantity, setToalQuantity] = useState(0);
   const [data, setData] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const id = user.id;
   const totalCalculate = () => {
     let total = 0;
     let count = 0;
@@ -63,26 +33,32 @@ const Cart = () => {
     }
     setToalCount(total);
     setToalQuantity(count);
-    
   };
 
-  useEffect(()=>{
-    function loadAllItems(){
-      getCartByUserId(1).then(({ data }) => {
+  useEffect(() => {
+    async function loadAllItems() {
+      await getCartByUserId(id).then(({ data }) => {
         setData(data);
-        totalCalculate();
+        let total = 0;
+        let count = 0;
+        for (let index = 0; index < data.length; index++) {
+          total = total + parseInt(data[index].price);
+          count++;
+        }
+        setToalCount(total);
+        setToalQuantity(count);
       });
     }
     loadAllItems();
-    
-  },[]);
-  
-  const buyNow = () =>{
+  }, []);
+
+  const buyNow = () => {
     navigate("/payment");
-  }
+  };
+
   return (
     <div>
-      <div>
+      <div style={{marginLeft: '6rem'}}>
         <table className="tablecart">
           <tr>
             <td className="cartColumn1">
@@ -91,8 +67,8 @@ const Cart = () => {
                   <Paper
                     sx={{
                       p: 2,
-                      margin: "auto",
-                      maxWidth: 500,
+                      margin: "10px",
+                      width: '90%',
                       flexGrow: 1,
                       backgroundColor: (theme) =>
                         theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -123,14 +99,14 @@ const Cart = () => {
                               {item.description.slice(0, 80)}
                             </Typography>
                           </Grid>
-                          <Grid item>
+                          {/* <Grid item>
                             <Typography
                               sx={{ cursor: "pointer" }}
                               variant="body2"
                             >
                               Remove
                             </Typography>
-                          </Grid>
+                          </Grid> */}
                         </Grid>
                         <Grid item>
                           <Typography variant="subtitle1" component="div">
@@ -145,6 +121,11 @@ const Cart = () => {
             </td>
             <td className="cartColumn2">
               <div>
+                <div>
+                  <h2>Order Summery</h2>
+                  <hr style={{width: '60%'}}/>
+                  <br/>
+                </div>
                 <Stack spacing={2} direction="row">
                   <Stack direction="column">
                     <h5>Total Item Count</h5>

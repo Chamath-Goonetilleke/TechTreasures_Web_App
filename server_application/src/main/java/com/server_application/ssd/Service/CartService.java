@@ -43,6 +43,16 @@ public class CartService {
         return jsonObjects;
     }
 
+    public void createNewCart(Cart cart) {
+        String insertCartSql = "INSERT INTO carts (itemId, userId, quantity) VALUES (?, ?, ?)";
+        jdbcTemplate.update(
+                insertCartSql,
+                cart.getItemId(),
+                cart.getUserId(),
+                cart.getQuantity()
+        );
+    }
+
     public class CartRowMapper implements RowMapper<Cart> {
         @Override
         public Cart mapRow(ResultSet rs, int rowNum) throws SQLException {
