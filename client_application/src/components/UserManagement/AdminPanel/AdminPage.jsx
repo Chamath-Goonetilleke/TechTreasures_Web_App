@@ -5,9 +5,10 @@ import Box from "@mui/material/Box";
 import CreateNewItem from "./CreateNewItem";
 import Orders from "./OrdersPage";
 import HistoryPage from "./HistoryPage";
+import ExistingItems from "./ExistingItems";
 
 export default function AdminPage() {
-  const [value, setValue] = React.useState("two");
+  const [value, setValue] = React.useState("one");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -37,7 +38,7 @@ export default function AdminPage() {
       </div>
       <div>
         {value === "one" ? (
-          <></>
+          <ExistingItems/>
         ) : value === "two" ? (
           <CreateNewItem />
         ) : value === "three" ? (

@@ -85,24 +85,14 @@ public class ItemService {
     }
 
     public void deleteItem(int itemId) {
+        String deleteImageUrlsSql = "DELETE FROM Item_imageUrls WHERE Item_id = ?";
+        jdbcTemplate.update(deleteImageUrlsSql, itemId);
 
         String deleteItemSql = "DELETE FROM items WHERE id = ?";
         jdbcTemplate.update(deleteItemSql, itemId);
 
-        String deleteImageUrlsSql = "DELETE FROM Item_imageUrls WHERE Item_id = ?";
-        jdbcTemplate.update(deleteImageUrlsSql, itemId);
-    }
 
-//    public void insertData(Cart cart) {
-//
-//        String sql = "INSERT INTO carts (itemId, userId) VALUES (?, ?)";
-//        jdbcTemplate.update(sql, cart.getItemId(), cart.getUserId());
-//    }
-//
-//    public void insertCardData(Card card) {
-//        String sql = "INSERT INTO cards (userId, cardNo, holderName, expireDate, cvc) VALUES (?, ?, ?, ?, ?)";
-//        jdbcTemplate.update(sql, card.getUserId(), card.getCardNo(), card.getHolderName(), card.getExpireDate(), card.getCvc());
-//    }
+    }
 
     public class ItemsRowMapper implements RowMapper<Item> {
         @Override
