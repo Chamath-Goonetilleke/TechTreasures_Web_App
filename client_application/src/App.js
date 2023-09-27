@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "./components/UserManagement/loginPage";
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
@@ -23,7 +23,8 @@ export default class App extends Component {
           <Route path="/item/:id" element={<Item />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/payment" element={<Payment />} />
-          <Route path="/profile" element={<ProfilePage/>} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/" element={<Navigate to="/home" />} />
         </Routes>
         <Footer />
       </React.Fragment>
