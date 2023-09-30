@@ -21,14 +21,14 @@ export default function OrderDetailsModal(props) {
         component="nav"
         aria-label="mailbox folders"
       >
-        <ListItem  button divider>
+        <ListItem button divider>
           <ListItemText primary="Item" />
-          <ListItemText primary="Quantity"/>
+          <ListItemText primary="Quantity" />
         </ListItem>
-        {Object.entries(order.orderedItem).map(([itemName, quantity]) => (
-          <ListItem key={itemName} button divider>
-            <ListItemText primary={itemName} />
-            <ListItemText primary={quantity} />
+        {order.orderedItem.map((item, index) => (
+          <ListItem key={index} button divider>
+            <ListItemText primary={Object.keys(item)[index]} />
+            <ListItemText primary={Object.values(item)[index]} />
           </ListItem>
         ))}
       </List>
