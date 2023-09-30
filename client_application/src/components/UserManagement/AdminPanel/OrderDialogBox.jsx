@@ -25,7 +25,7 @@ export default function OrderDetailsModal(props) {
           <ListItemText primary="Item" />
           <ListItemText primary="Quantity"/>
         </ListItem>
-        {Object.entries(order.orderedItem[0]).map(([itemName, quantity]) => (
+        {Object.entries(order.orderedItem).map(([itemName, quantity]) => (
           <ListItem key={itemName} button divider>
             <ListItemText primary={itemName} />
             <ListItemText primary={quantity} />
