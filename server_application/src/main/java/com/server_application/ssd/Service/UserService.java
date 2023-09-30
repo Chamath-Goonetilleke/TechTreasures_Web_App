@@ -3,6 +3,8 @@ package com.server_application.ssd.Service;
 import com.server_application.ssd.DTO.AuthUser;
 import com.server_application.ssd.Models.User;
 import org.apache.commons.codec.binary.Hex;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -23,33 +25,36 @@ public class UserService {
     public void createUser(User user) {
         String insertUserSql = "INSERT INTO user (name, email, password, userRole, phoneNumber, address) VALUES (?, ?, ?, ?, ?, ?)";
 
-        String password = User.encrypt(user.getPassword());
+//        String password = User.encrypt(user.getPassword());
 
         jdbcTemplate.update(
                 insertUserSql,
                 user.getName(),
                 user.getEmail(),
-                password,
+                user.getPassword(),
                 "USER",
                 null,
                 null
         );
     }
 
-    public User auth(AuthUser authUser) {
+    public ResponseEntity<?> auth(AuthUser authUser) {
 
-        User user = getUserByEmail(authUser.getEmail());
-        if (user != null && User.verify(authUser.getPassword(), user.getPassword())) {
-            return user;
+        String selectUserSql = "SELECT * FROM user WHERE email = '" + authUser.getEmail() + "' AND password = '" + authUser.getPassword() + "';";
+        try {
+            return ResponseEntity.status(200).body(jdbcTemplate.query(selectUserSql, new UserRowMapper()));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("ERROR: "+e);
         }
-
-        return null;
-
     }
 
     public User getUserById(int userId) {
         String selectUserSql = "SELECT * FROM user WHERE id = ?";
         return jdbcTemplate.queryForObject(selectUserSql, new UserRowMapper(), userId);
+    }
+    public User getUserByEmailAndPassword(String email, String password) {
+        String selectUserSql = "SELECT * FROM user WHERE email = ? AND password = ?";
+        return jdbcTemplate.queryForObject(selectUserSql, new UserRowMapper(), new Object[]{email, password});
     }
 
     public User getUserByEmail(String email) {

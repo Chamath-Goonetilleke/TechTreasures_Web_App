@@ -19,11 +19,8 @@ public class UserController {
 
     @PostMapping("/auth")
     public ResponseEntity<?> authUser(@RequestBody AuthUser authUser){
-        User user = userService.auth(authUser);
-        if (user != null){
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Login Unsuccessful", HttpStatus.BAD_REQUEST);
+
+        return userService.auth(authUser);
     }
 
     @PostMapping("/createUser")
